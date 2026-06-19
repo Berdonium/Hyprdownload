@@ -1,29 +1,28 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ARCHIVE="$SCRIPT_DIR/hyprdownload.tar.gz"
 BIN_DIR="$HOME/.local/bin"
 BIN="$BIN_DIR/hyprdownload"
+REPO="Berdonium/Hyprdownload"
 
-if [ ! -f "$ARCHIVE" ]; then
-    echo "Error: $ARCHIVE not found. Place this script alongside hyprdownload.tar.gz"
-    exit 1
+if [ -f "$(dirname "$0")/Cargo.toml" ]; then
+    echo "Building from local source..."
+    cd "$(dirname "$0")"
+    cargo build --release
+    mkdir -p "$BIN_DIR"
+    cp target/release/hyprdownload "$BIN"
+else
+    echo "Cloning from github.com/$REPO..."
+    tmpdir="$(mktemp -d)"
+    git clone "https://github.com/$REPO.git" "$tmpdir"
+    cd "$tmpdir"
+    cargo build --release
+    mkdir -p "$BIN_DIR"
+    cp target/release/hyprdownload "$BIN"
+    rm -rf "$tmpdir"
 fi
 
-echo "Extracting..."
-tmpdir="$(mktemp -d)"
-tar xzf "$ARCHIVE" -C "$tmpdir"
-
-mkdir -p "$BIN_DIR"
-
-if [ -f "$BIN" ]; then
-    cp "$BIN" "$BIN.bak" 2>/dev/null || true
-fi
-
-cp "$tmpdir/hyprdownload-release/hyprdownload" "$BIN"
 chmod +x "$BIN"
-rm -rf "$tmpdir"
 
 if ! echo "$PATH" | tr ':' '\n' | grep -qx "$BIN_DIR"; then
     rc="$HOME/.bashrc"
