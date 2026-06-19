@@ -5,21 +5,35 @@ BIN_DIR="$HOME/.local/bin"
 BIN="$BIN_DIR/hyprdownload"
 REPO="Berdonium/Hyprdownload"
 
-if [ -f "$(dirname "$0")/Cargo.toml" ]; then
+SCRIPT_DIR="$(cd "$(dirname "$0")" 2>/dev/null || pwd)"
+
+# If Cargo.toml exists locally, build from source
+if [ -f "$SCRIPT_DIR/Cargo.toml" ]; then
     echo "Building from local source..."
-    cd "$(dirname "$0")"
+    cd "$SCRIPT_DIR"
     cargo build --release
     mkdir -p "$BIN_DIR"
     cp target/release/hyprdownload "$BIN"
+
+# If tar.gz is local, extract it
+elif [ -f "$SCRIPT_DIR/hyprdownload.tar.gz" ]; then
+    echo "Extracting local archive..."
+    mkdir -p "$BIN_DIR"
+    tmpdir="$(mktemp -d)"
+    tar xzf "$SCRIPT_DIR/hyprdownload.tar.gz" -C "$tmpdir"
+    cp "$tmpdir/hyprdownload-release/hyprdownload" "$BIN"
+    rm -rf "$tmpdir"
+
+# Otherwise clone from GitHub and extract from the bundled archive
 else
-    echo "Cloning from github.com/$REPO..."
+    echo "Downloading from github.com/$REPO..."
     tmpdir="$(mktemp -d)"
     cd "$tmpdir"
-    git clone "https://github.com/$REPO.git"
-    cd Hyprdownload
-    cargo build --release
+    git clone "https://github.com/$REPO.git" .
+    tar xzf hyprdownload.tar.gz -C "$tmpdir"
     mkdir -p "$BIN_DIR"
-    cp target/release/hyprdownload "$BIN"
+    cp hyprdownload-release/hyprdownload "$BIN"
+    cd /
     rm -rf "$tmpdir"
 fi
 
