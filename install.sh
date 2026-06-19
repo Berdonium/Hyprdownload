@@ -14,8 +14,9 @@ if [ -f "$(dirname "$0")/Cargo.toml" ]; then
 else
     echo "Cloning from github.com/$REPO..."
     tmpdir="$(mktemp -d)"
-    git clone "https://github.com/$REPO.git" "$tmpdir"
     cd "$tmpdir"
+    git clone "https://github.com/$REPO.git"
+    cd Hyprdownload
     cargo build --release
     mkdir -p "$BIN_DIR"
     cp target/release/hyprdownload "$BIN"
