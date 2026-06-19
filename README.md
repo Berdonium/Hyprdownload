@@ -8,6 +8,7 @@ For full installation(recommended) run :
 curl -fsSL https://raw.githubusercontent.com/Berdonium/Hyprdownload/main/install.sh | bash
 ```
 
+## Manuel Installation
 For a manuel download the github repo with :
 ```shell
 git clone github.com/Berdonium/Hyprdownload
