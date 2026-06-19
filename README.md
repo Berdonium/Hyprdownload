@@ -4,15 +4,23 @@ Please give me feedback to make it better
 
 ## Installation
 For full installation(recommended) run :
-```curl -fsSL https://raw.githubusercontent.com/Berdonium/Hyprdownload/main/install.sh | bash```
+```shell
+curl -fsSL https://raw.githubusercontent.com/Berdonium/Hyprdownload/main/install.sh | bash
+```
 
 For a manuel download the github repo with :
-```git clone github.com/Berdonium/Hyprdownload```
+```shell
+git clone github.com/Berdonium/Hyprdownload
+```
 
 Then run :
-```cd Hyprdownload```
+```shell
+cd Hyprdownload
+```
  
 And to finally install it run: 
-```./install.sh```
+```shell
+./install.sh
+```
 
 ## Usage
